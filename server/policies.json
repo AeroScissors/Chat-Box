@@ -1,0 +1,111 @@
+{
+  "company": "Example Company",
+  "assistant_name": "Example Company Assistant",
+  "policies": [
+    {
+      "id": "sec-passwords",
+      "category": "security",
+      "title": "Password policy",
+      "keywords": ["password", "passphrase", "login", "credentials", "2fa", "mfa", "two-factor", "authenticator"],
+      "content": "Passwords must be at least 14 characters and unique per system. Use the company password manager (1Password) to generate and store them. Multi-factor authentication (MFA) is mandatory for email, VPN, GitHub, AWS and the HR portal. Never share passwords over chat or email; use 1Password shared vaults instead. Passwords must be rotated immediately if a device is lost or a breach is suspected."
+    },
+    {
+      "id": "sec-devices",
+      "category": "security",
+      "title": "Device and laptop security",
+      "keywords": ["laptop", "device", "encryption", "lost", "stolen", "usb", "screen lock", "byod", "phone", "mobile"],
+      "content": "All company laptops must have full-disk encryption (FileVault / BitLocker) enabled and the endpoint agent installed. Screens must lock after 5 minutes of inactivity. Personal devices (BYOD) may access email only through the managed mobile app. Unknown USB drives must never be plugged in. Report a lost or stolen device to security@example.com within 1 hour so it can be remotely wiped."
+    },
+    {
+      "id": "sec-phishing",
+      "category": "security",
+      "title": "Phishing and suspicious emails",
+      "keywords": ["phishing", "suspicious", "email", "link", "attachment", "scam", "report", "spam"],
+      "content": "Do not click links or open attachments from unexpected senders. Use the 'Report Phishing' button in the mail client; the security team reviews every report within 4 business hours. If you already clicked a link or entered credentials, change the password immediately and contact security@example.com. Never forward suspected phishing emails to colleagues."
+    },
+    {
+      "id": "sec-incident",
+      "category": "security",
+      "title": "Security incident reporting",
+      "keywords": ["incident", "breach", "hack", "compromise", "malware", "virus", "ransomware", "leak"],
+      "content": "Any suspected security incident (malware, data leak, unauthorised access, ransomware) must be reported immediately to security@example.com or the #security-incidents Slack channel. Do not attempt to investigate or clean up on your own. Preserve evidence: do not power off the machine unless instructed. The on-call security engineer is reachable 24/7 via the PagerDuty 'security' rotation."
+    },
+    {
+      "id": "sec-data-classification",
+      "category": "security",
+      "title": "Data classification and handling",
+      "keywords": ["classification", "confidential", "public", "internal", "restricted", "pii", "personal data", "customer data", "share", "gdpr"],
+      "content": "Data is classified as Public, Internal, Confidential or Restricted. Customer PII, payment data and credentials are Restricted: they may only be stored in approved systems, never in spreadsheets, Slack, or personal drives. Confidential documents must be shared via Google Drive with named users only, never 'anyone with the link'. Restricted data must not leave the EU/US production regions. When in doubt, treat data as Confidential."
+    },
+    {
+      "id": "sec-access",
+      "category": "security",
+      "title": "Access control and least privilege",
+      "keywords": ["access", "permission", "admin", "privilege", "role", "request access", "offboarding", "onboarding", "vpn"],
+      "content": "Access follows least privilege: request the minimum role needed through the IT Access Request form in Jira (project ACC). Admin and production access require manager approval and expire after 90 days unless renewed. Access reviews run quarterly. On the last working day, all accounts are disabled automatically by HR offboarding. VPN is required for any access to internal tools from outside the office."
+    },
+    {
+      "id": "co-remote-work",
+      "category": "company",
+      "title": "Remote and hybrid work policy",
+      "keywords": ["remote", "work from home", "wfh", "hybrid", "office", "days in office", "relocate", "abroad"],
+      "content": "Employees may work remotely up to 3 days per week; Tuesday and Thursday are anchor office days for all teams. Working from another country for more than 14 consecutive days requires HR approval in advance for tax and compliance reasons. Remote employees must use the company VPN and a private, password-protected Wi-Fi network."
+    },
+    {
+      "id": "co-leave",
+      "category": "company",
+      "title": "Leave and time off",
+      "keywords": ["leave", "vacation", "holiday", "pto", "time off", "sick", "sick leave", "parental", "maternity", "paternity"],
+      "content": "Full-time employees receive 25 days of paid annual leave plus public holidays. Leave is requested in BambooHR at least 2 weeks in advance for absences longer than 3 days. Sick leave does not require a doctor's note for the first 3 days. Parental leave is 16 weeks fully paid for all parents. Up to 5 unused days can be carried over to the next year."
+    },
+    {
+      "id": "co-expenses",
+      "category": "company",
+      "title": "Expenses and reimbursement",
+      "keywords": ["expense", "reimbursement", "receipt", "travel", "per diem", "flight", "hotel", "budget", "spend"],
+      "content": "Submit expenses in Expensify within 30 days with itemised receipts. Meals while travelling are covered up to 60 USD per day. Flights must be economy class unless the flight is longer than 6 hours. Hotels are capped at 200 USD per night in most cities (higher caps apply for NYC, London and SF). Anything above 500 USD requires manager pre-approval."
+    },
+    {
+      "id": "co-conduct",
+      "category": "company",
+      "title": "Code of conduct",
+      "keywords": ["conduct", "harassment", "respect", "behaviour", "behavior", "complaint", "hr", "ethics", "whistleblower"],
+      "content": "We are committed to a respectful, inclusive workplace. Harassment or discrimination of any kind is not tolerated. Concerns can be raised with your manager, HR (people@example.com), or anonymously through the Ethics Hotline. Retaliation against anyone who reports a concern in good faith is prohibited."
+    },
+    {
+      "id": "co-communication",
+      "category": "company",
+      "title": "Communication and working hours",
+      "keywords": ["slack", "meeting", "working hours", "core hours", "response time", "email etiquette", "no meeting"],
+      "content": "Core collaboration hours are 10:00–16:00 local time. Slack is for quick questions; decisions must be documented in Confluence or the relevant Jira ticket. Wednesdays are no-meeting days. Nobody is expected to respond to messages outside their working hours unless they are on call."
+    },
+    {
+      "id": "db-access",
+      "category": "database",
+      "title": "Database access policy",
+      "keywords": ["database", "db", "production database", "prod", "read replica", "sql", "query", "postgres", "mysql", "connect"],
+      "content": "Direct access to production databases is restricted to the Data Platform and SRE teams. Engineers query production data through the read replica via the Metabase or the 'db-proxy' bastion, both of which log every query. Personal database credentials are issued per user through Vault and expire every 24 hours; shared credentials are forbidden. Write access to production requires an approved change ticket."
+    },
+    {
+      "id": "db-backups",
+      "category": "database",
+      "title": "Database backups and retention",
+      "keywords": ["backup", "restore", "retention", "snapshot", "point in time", "recovery", "rpo", "rto", "disaster"],
+      "content": "Production databases (PostgreSQL on AWS RDS) take automated snapshots every 6 hours with point-in-time recovery enabled. Snapshots are retained for 35 days; monthly snapshots are kept for 1 year in a separate account. Restore drills are performed quarterly by SRE. Targets: RPO 15 minutes, RTO 1 hour. Restores are requested via a P2 incident ticket."
+    },
+    {
+      "id": "db-migrations",
+      "category": "database",
+      "title": "Schema changes and migrations",
+      "keywords": ["migration", "schema", "alter table", "column", "index", "ddl", "deploy", "rollback"],
+      "content": "Schema changes go through versioned migrations in the service repository and are reviewed by a database owner. Migrations must be backward compatible (expand/contract pattern): add the new column, backfill, switch the code, then drop the old column in a later release. Long-running index builds use CONCURRENTLY. Destructive migrations require a tested rollback plan and a maintenance window announcement in #eng-announcements."
+    },
+    {
+      "id": "db-data-handling",
+      "category": "database",
+      "title": "Handling data from the database",
+      "keywords": ["export", "dump", "csv", "copy data", "local", "anonymise", "anonymize", "mask", "test data", "staging"],
+      "content": "Production data must never be copied to laptops or staging. Staging uses anonymised datasets generated by the 'db-anonymiser' job. Ad-hoc exports containing customer data must be approved by the data owner, stored only in the 'restricted-exports' bucket, and deleted within 7 days. Test data must be synthetic."
+    }
+  ]
+}

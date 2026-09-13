@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Example Company — Demo host site</title>
+    <style>
+      /* Deliberately hostile host CSS: the widget must survive all of this. */
+      * {
+        box-sizing: border-box;
+        font-family: Georgia, 'Times New Roman', serif;
+      }
+      body {
+        margin: 0;
+        background: #faf7f2;
+        color: #2b2b2b;
+        line-height: 1.6;
+      }
+      button {
+        background: hotpink !important;
+        border: 4px dashed lime;
+        font-size: 30px;
+        border-radius: 0;
+        color: purple;
+        padding: 20px;
+      }
+      div {
+        border: 1px dotted rgba(255, 0, 0, 0.35);
+      }
+      p {
+        text-transform: uppercase;
+      }
+      h2 {
+        color: orange;
+        font-size: 60px;
+      }
+      code,
+      pre {
+        color: red;
+        background: yellow;
+      }
+      a {
+        color: green;
+        text-decoration: line-through;
+      }
+      /* Host layout */
+      nav {
+        display: flex;
+        gap: 24px;
+        align-items: center;
+        padding: 16px 32px;
+        background: #1f2a44;
+        color: #fff;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        text-transform: none;
+      }
+      .hero {
+        padding: 80px 32px;
+        text-align: center;
+        background: linear-gradient(135deg, #f3e9dc, #e2ecf7);
+      }
+      .hero h1 {
+        font-size: 48px;
+        margin: 0 0 12px;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 24px;
+        padding: 40px 32px;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+      .card {
+        background: #fff;
+        padding: 24px;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+      }
+      footer {
+        padding: 32px;
+        text-align: center;
+        color: #777;
+        border-top: 1px solid #ddd;
+      }
+      .controls {
+        max-width: 1100px;
+        margin: 0 auto 40px;
+        padding: 24px 32px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+        font-family: system-ui, sans-serif;
+      }
+      .controls * {
+        font-family: system-ui, sans-serif;
+      }
+      .controls p {
+        text-transform: none;
+      }
+      .controls label {
+        display: block;
+        margin: 8px 0 4px;
+        font-size: 13px;
+        color: #555;
+      }
+      .controls input,
+      .controls select {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 14px;
+      }
+      .controls .grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+      }
+      .controls button {
+        background: #1f2a44 !important;
+        border: 0;
+        color: #fff;
+        font-size: 14px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 12px 8px 0 0;
+      }
+      .log {
+        margin-top: 12px;
+        font-family: ui-monospace, monospace;
+        font-size: 12px;
+        background: #f4f4f4;
+        padding: 10px;
+        border-radius: 8px;
+        max-height: 160px;
+        overflow: auto;
+        white-space: pre-wrap;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <strong>Example Company</strong>
+      <a href="#">Products</a>
+      <a href="#">Pricing</a>
+      <a href="#">Docs</a>
+      <a href="#">Contact</a>
+    </nav>
+
+    <section class="hero">
+      <h1>We build things that ship.</h1>
+      <p>This page is an unrelated host website with intentionally awful global CSS.</p>
+      <button type="button">A host button styled by the host</button>
+    </section>
+
+    <section class="cards">
+      <div class="card"><h3>Fast</h3><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p></div>
+      <div class="card"><h3>Reliable</h3><p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p></div>
+      <div class="card"><h3>Secure</h3><p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p></div>
+    </section>
+
+    <section class="controls">
+      <h3 style="margin-top: 0">Widget test controls</h3>
+      <p>Change configuration live. Nothing on this panel is part of the product — it just exercises the public API.</p>
+      <div class="grid">
+        <div>
+          <label for="provider">Provider</label>
+          <select id="provider">
+            <option value="custom">Custom API (proxy + policies, Mode B)</option>
+            <option value="ollama">Ollama (direct, Mode A)</option>
+            <option value="openai">OpenAI-compatible API</option>
+          </select>
+        </div>
+        <div>
+          <label for="model">Model</label>
+          <input id="model" value="" placeholder="e.g. gemma3:4b (leave empty for proxy default)" />
+        </div>
+        <div>
+          <label for="ollama-url">Ollama URL</label>
+          <input id="ollama-url" value="http://localhost:11434" />
+        </div>
+        <div>
+          <label for="api-endpoint">API endpoint (OpenAI base URL or custom endpoint)</label>
+          <input id="api-endpoint" value="http://localhost:8787/api/chat" />
+        </div>
+        <div>
+          <label for="api-key">API key (dev only)</label>
+          <input id="api-key" type="password" placeholder="sk-…" autocomplete="off" />
+        </div>
+        <div>
+          <label for="theme">Theme</label>
+          <select id="theme">
+            <option value="system">system</option>
+            <option value="light">light</option>
+            <option value="dark">dark</option>
+          </select>
+        </div>
+        <div>
+          <label for="position">Position</label>
+          <select id="position">
+            <option value="bottom-right">bottom-right</option>
+            <option value="bottom-left">bottom-left</option>
+          </select>
+        </div>
+        <div>
+          <label for="primary">Primary color</label>
+          <input id="primary" type="color" value="#2563eb" />
+        </div>
+        <div>
+          <label for="persist">Persist conversation</label>
+          <select id="persist">
+            <option value="false">false</option>
+            <option value="true">true</option>
+          </select>
+        </div>
+      </div>
+      <button type="button" id="apply">Apply config</button>
+      <button type="button" id="open">widget.open()</button>
+      <button type="button" id="close">widget.close()</button>
+      <button type="button" id="clear">widget.clearConversation()</button>
+      <button type="button" id="send-md">sendMessage(markdown test)</button>
+      <button type="button" id="check">Check Ollama</button>
+      <div class="log" id="log">events will appear here…</div>
+    </section>
+
+    <footer>© Example Company. Footer content that has nothing to do with the widget.</footer>
+
+    <!-- ===== Widget integration: exactly what a host site would add ===== -->
+    <script>
+      window.ChatWidgetConfig = {
+        subtitle: 'Policies · Security · Databases',
+      };
+    </script>
+    <script type="module" src="../src/index.ts"></script>
+    <ai-chat-widget
+      provider="custom"
+      api-endpoint="http://localhost:8787/api/chat"
+      title="Example Company Assistant"
+      theme="system"
+      position="bottom-right"
+      welcome-message="Hi! I can answer questions about **security**, **company policies** and **databases** from our policy handbook — or just chat normally. Try: *What is the password policy?*"
+    ></ai-chat-widget>
+    <!-- ================================================================== -->
+
+    <script>
+      const widget = document.querySelector('ai-chat-widget');
+      const log = document.getElementById('log');
+      const $ = (id) => document.getElementById(id);
+      const print = (msg) => {
+        log.textContent = `${new Date().toLocaleTimeString()} ${msg}\n` + log.textContent;
+      };
+      for (const evt of ['chat-open', 'chat-close', 'message-sent', 'response-start', 'response-complete', 'error', 'conversation-cleared']) {
+        widget.addEventListener(evt, (e) => {
+          const d = e.detail;
+          const summary = d && d.message ? (d.message.content || d.message).toString().slice(0, 60) : d ? JSON.stringify(d).slice(0, 80) : '';
+          print(`${evt} ${summary}`);
+        });
+      }
+      $('apply').addEventListener('click', () => {
+        widget.setConfig({
+          provider: $('provider').value,
+          model: $('model').value,
+          ollamaUrl: $('ollama-url').value,
+          apiEndpoint: $('api-endpoint').value,
+          apiKey: $('api-key').value,
+          theme: $('theme').value,
+          position: $('position').value,
+          primaryColor: $('primary').value,
+          persistConversation: $('persist').value === 'true',
+        });
+        print('config applied');
+      });
+      $('open').addEventListener('click', () => widget.open());
+      $('close').addEventListener('click', () => widget.close());
+      $('clear').addEventListener('click', () => widget.clearConversation());
+      $('send-md').addEventListener('click', () => {
+        widget.open();
+        widget.sendMessage(
+          'Reply using Markdown: a heading, a bulleted list, a numbered list, bold and italic text, an inline code span, a link to https://example.com, a blockquote, and a fenced JavaScript code block.',
+        );
+      });
+      $('check').addEventListener('click', async () => {
+        const url = $('ollama-url').value.replace(/\/+$/, '') + '/api/tags';
+        try {
+          const r = await fetch(url);
+          const j = await r.json();
+          print(`Ollama reachable. Models: ${(j.models || []).map((m) => m.name).join(', ') || '(none)'}`);
+        } catch (err) {
+          print(`Ollama NOT reachable at ${url}: ${err}`);
+        }
+      });
+    </script>
+  </body>
+</html>

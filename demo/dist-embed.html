@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Production bundle embed test</title>
+  </head>
+  <body style="font-family: sans-serif; padding: 40px">
+    <h1>Plain HTML page using dist/chat-widget.js</h1>
+    <p>Run <code>npm run build</code>, then serve the repo root (e.g. <code>npx vite preview</code>) and open <code>/demo/dist-embed.html</code>.</p>
+
+    <script>
+      window.ChatWidgetConfig = { provider: 'ollama', model: 'gemma3:4b', title: 'AI Assistant' };
+    </script>
+    <script src="../dist/chat-widget.js"></script>
+    <ai-chat-widget></ai-chat-widget>
+  </body>
+</html>

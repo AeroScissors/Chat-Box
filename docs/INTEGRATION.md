@@ -321,4 +321,4 @@ Only want policy answers and nothing else? Start the server with `SCOPE=policies
 | Bubble is hidden behind something        | Your page has an element with a huge `z-index`; the widget uses `2147483000` — raise it with `ai-chat-widget { --acw-z-index: 2147483647 }`                                                               |
 | Nothing appears at all                   | Check the script path in the browser's Network tab (404?) and that the tag is spelled `ai-chat-widget`                                                                                                    |
 
-Still stuck? The full technical README covers every option: [README.md](./README.md).
+Still stuck? The full technical README covers every option: [REFERENCE.md](./REFERENCE.md).

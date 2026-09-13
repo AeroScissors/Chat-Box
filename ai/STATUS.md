@@ -1,6 +1,6 @@
 # Status
 
-**Last updated:** 2026-09-13 (integration guide + AI prompt added)
+**Last updated:** 2026-09-13 (short README; long docs in docs/)
 
 **State:** v0.1.0 + company knowledge base. Proxy answers security/company/database questions from `server/policies.json` and chats normally otherwise; demo defaults to the proxy. v0.1.0 core complete — all Definition-of-Done items implemented and verified (see `ai/TASKS.md`). Build, tests (56), lint, typecheck all green. Verified end-to-end in Chrome against a real local Ollama instance in all three provider modes.
 

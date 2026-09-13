@@ -1,5 +1,8 @@
 # Changelog
 
+## 2026-09-13 — Short README
+- README reduced to: run commands, embed snippet, compact AI-integration prompt, links. Former README → `docs/REFERENCE.md`; `INTEGRATION.md` → `docs/INTEGRATION.md`. Cross-links updated.
+
 ## 2026-09-13 — Plain-English integration guide + AI integration prompt
 - Added `INTEGRATION.md`: 5-step non-technical guide (get file → two lines → choose A/B/C → customise → control), collapsible recipes for HTML/PHP/Django/Laravel/Rails, React, Next.js, Vue/Nuxt, Angular, WordPress, site builders; knowledge-base how-to; go-live checklist; troubleshooting table.
 - README: linked the guide at the top and added "Let an AI integrate it for you" — a self-contained prompt (embedding lines, attributes, provider protocols, API/events, framework caveats, security rules, and the tasks to perform) for Claude Code / Cursor / ChatGPT users.

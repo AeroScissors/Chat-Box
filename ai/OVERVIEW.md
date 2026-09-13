@@ -10,4 +10,4 @@
 
 **Knowledge base:** `server/policies.json` (security / company / database policies) is retrieved per question by the proxy and injected into the system prompt, so the assistant answers policy questions from the handbook and chats normally otherwise.
 
-**Key docs:** `INTEGRATION.md` (plain-English how-to + framework recipes), `README.md` (technical reference incl. AI integration prompt), `ai/ARCHITECTURE.md`, `ai/API.md`, `ai/PIPELINE.md`, `ai/STATUS.md`, `ai/TASKS.md`, `ai/CHANGELOG.md`.
+**Key docs:** `README.md` (short: commands + embed snippet + AI integration prompt), `docs/INTEGRATION.md` (plain-English how-to + framework recipes), `docs/REFERENCE.md` (full technical reference), `ai/ARCHITECTURE.md`, `ai/API.md`, `ai/PIPELINE.md`, `ai/STATUS.md`, `ai/TASKS.md`, `ai/CHANGELOG.md`.

@@ -5,7 +5,8 @@
 - `npm run build` — `tsc --noEmit` then Vite lib build → `dist/`
 - `npm test` — Vitest (jsdom), `tests/*.test.ts`
 - `npm run lint` — ESLint (`src`, `tests`, `server`)
-- `npm run proxy` — starts `server/proxy.mjs` (Mode B reference backend)
+- `npm run proxy` — starts `server/proxy.mjs` (Mode B reference backend); env: `MODEL`, `KNOWLEDGE_FILE`, `POLICIES_DIR`, `DB_URL`… (see `ai/API.md`)
+- `npm run pdf2json -- <file.pdf> [out.json] [--category c]` — convert a policy document to editable policies JSON
 - `npx vite preview` → `/demo/dist-embed.html` tests the built IIFE bundle on a plain page
 
 ## Message flow
@@ -19,6 +20,21 @@
 ## Verification performed (2026-09-13)
 - 56 unit/integration tests pass; typecheck + lint clean; build 49 KB IIFE.
 - Browser (Chrome) against local Ollama `qwen2.5-coder:7b-instruct`: streaming, stop with partial retained, Markdown + code copy UI, light/dark, mobile full-screen at 390 px, focus/aria state, error paths (unreachable host, missing model, proxy 400), Mode B via `server/proxy.mjs`, OpenAI-compatible via Ollama `/v1`, production bundle on a plain page with no framework globals.
+
+## Knowledge-source verification (2026-09-14, llama3:latest via proxy, PDF-only)
+| Question (as typed) | Result |
+|---|---|
+| after how many incorrect logins is an account locked, for how long | 7 / 30 min (2.1.9) ✓ |
+| how many days to patch servers after a critical patch | 30 days (14.1) ✓ |
+| how long are logs retained | one year (9.9) ✓ |
+| customer data on a USB stick | not allowed (23.2; §25 also retrieved) ✓ |
+| what is the DR policy / sla for critical vulnerability | §5 / 30 days (10.4.5.1) ✓ after keyword edits in JSON |
+| what is ntp policy | §19.1 ✓ after acronym keywords |
+| im leaving the company, when is my access cut off | 24 h (8.3) ✓ after keywords |
+| we found a bug…, how fast to fix | 30 d / 14 d zero-day (10.4.5) ✓ after synonyms |
+| can i install spotify | not allowed (3.3) ✓ |
+| colleague gives me her password? | correct "no", cites 2.1.5 instead of 2.2.5 ✗ (model precision) |
+| lost my laptop | not covered by the PDF → generic advice ⚠ |
 
 ## Security probe log (2026-09-13, qwen2.5-coder:7b-instruct via proxy)
 | Probe | Before hardening | After |

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2026-09-14 — Repo initialised and pushed
+- Folder was a zip download (no `.git`). Initialised on top of `origin/main` (`git init -b main`, fetch, `git reset origin/main`), added `.gitattributes` (`*.pdf binary` — Git had started CRLF-converting the sample PDF) and gitignore rule `server/policies/*` + `!server/policies/example-handbook.pdf` so company documents (the iCIMS PDF/JSON) stay local.
+- Commit `ea8188d` (17 files, +1170/−77) pushed to https://github.com/AeroScissors/Chat-Box `main`. `ai/` refreshed afterwards (this entry, STATUS, TASKS, OVERVIEW, PIPELINE).
+
 ## 2026-09-14 — Natural-language question test (10 office-worker questions, llama3, PDF-only)
 - First pass: 5 correct, 2 partial (topics the PDF does not cover: lost laptop, phishing), 3 wrong (leaving-company access cut-off → §8.3 not retrieved; "bug… how fast to fix" → §10 not retrieved; "install spotify" → §3 not retrieved; llama3 then invented citations).
 - Fixes: `QUERY_SYNONYMS` extended (bug/flaw/exploit → vulnerability; leaving/quit/resign/fired → employ/removed/termination; install/app/program → software/authorized; lost/stolen; phishing/scam). Hand-added human phrasings to the JSON keywords of §8 Access Control, §3 Authorized Software, §10 Vulnerability Management, §11 Security Awareness (hot-reloaded, no restart).

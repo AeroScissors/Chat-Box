@@ -1,20 +1,29 @@
 # Status
 
-**Last updated:** 2026-09-14 (PDF documents + MySQL knowledge sources)
+**Last updated:** 2026-09-14 (knowledge sources + pdf2json + llama3 tuning; pushed to GitHub)
 
-**State:** v0.1.0 + company knowledge base. Proxy answers security/company/database questions from `server/policies.json`, PDF/txt/md files in `server/policies/` (pdf-parse) and optionally MySQL tables (`DB_URL`, mysql2), and chats normally otherwise; demo defaults to the proxy. v0.1.0 core complete — all Definition-of-Done items implemented and verified (see `ai/TASKS.md`). Build, tests (56), lint, typecheck all green. Verified end-to-end in Chrome against a real local Ollama instance in all three provider modes.
+**Repo:** https://github.com/AeroScissors/Chat-Box — local folder initialised as a git repo on 2026-09-14 on top of the remote `main` and pushed (`ea8188d`). `server/policies/*` is gitignored except the sample handbook (company documents stay local).
 
-**Environment notes:** Ollama running locally with `llama3:latest` (8B, current) and `gemma3-12b:latest`. Run the proxy with `KNOWLEDGE_FILE=none COMPANY_NAME="Example Company" ASSISTANT_NAME="Example Company Assistant" MODEL=llama3:latest npm run proxy` (sample policies.json disabled — it conflicts with the real PDF) (the proxy decides the model; the demo leaves `model` empty). Direct Ollama mode (Mode A) still needs a `model` attribute.
+**State:** v0.1.0 widget + server-side company knowledge base. Proxy answers policy questions from three mergeable sources — `server/policies.json`, documents in `server/policies/` (`.pdf/.txt/.md`, or `.json` produced by `npm run pdf2json`), and optionally MySQL tables (`DB_URL`) — and chats normally otherwise. Build, tests (56), lint, typecheck green. Verified end-to-end in Chrome with a real 39-page IT security policy PDF and with 10 natural-language "office worker" questions (8/10 fully correct with section citations; see CHANGELOG).
 
-**Security posture (proxy):** hardened against client system-message override, fake policy-update injection, forged assistant history, flooding, and policy enumeration (see README → Threat model). Residual: prompt defenses are model-dependent; server-side sessions would be the structural fix for forged history; `AUTH_TOKEN` is a stop-gap, real deployments need SSO/session checks.
+**How it is run right now (dev box):** Ollama with `llama3:latest` (8B; chosen over `gemma3-12b` for speed: first token ~3 s, answers 5-20 s). Sample `policies.json` disabled because it conflicts with the real PDF:
 
-**Knowledge sources (2026-09-14):** Recommended workflow: `npm run pdf2json -- <pdf>` → edit keywords in the JSON → keep in `server/policies/`. PDF path verified end-to-end with the sample handbook and with a real 39-page IT security policy PDF (52 sections; questions answered correctly in Chrome — see CHANGELOG 2026-09-14). MySQL path implemented (`server/db.mjs`) and verified only for config validation + graceful ECONNREFUSED — no MySQL server was available; needs a real phpMyAdmin DB test. Runtime deps added: `pdf-parse`, `mysql2` (both lazily imported).
+```
+KNOWLEDGE_FILE=none COMPANY_NAME="Example Company" ASSISTANT_NAME="Example Company Assistant" MODEL=llama3:latest npm run proxy
+```
+
+Demo at `http://localhost:5174/demo/index.html` (Vite; 5173 was occupied). Direct Ollama mode (Mode A) still needs a `model` attribute.
+
+**Recommended knowledge workflow:** `npm run pdf2json -- server/policies/<doc>.pdf` → review the generated JSON (titles, content) → add hand-written `keywords` with the phrases employees actually use (`"dr"`, `"sla"`, `"leaving the company"`, `"spotify"`) → keep the JSON in `server/policies/` (hot-reloaded; the PDF next to it is skipped). Keep one source of truth per topic — two sources with different numbers get blended by the model.
+
+**Security posture (proxy):** hardened against client system-message override, fake policy-update injection, forged assistant history (now folded into one labelled user turn), flooding, policy enumeration; `<<<`/`>>>` markers stripped from output. Residual: prompt defenses are model-dependent (llama3-8B occasionally cites the wrong sub-clause of a long section); server-side sessions would be the structural fix for forged history; `AUTH_TOKEN` is a stop-gap, real deployments need SSO/session checks.
+
+**Not verified:** MySQL source (`server/db.mjs`) — only config validation and graceful ECONNREFUSED tested; no MySQL/phpMyAdmin server was available.
 
 **Known limitations / follow-ups (not blocking):**
-- Retrieval is keyword-based; questions phrased with words the document never uses can miss the right section (small synonym map helps). Embedding-based retrieval (e.g. Ollama `nomic-embed-text`) would be the structural fix.
-- Heading detection for PDFs is heuristic; oddly formatted PDFs fall back to ~1500-char chunks (still searchable, less precise titles).
-- DB rows are loaded in full (`DB_MAX_ROWS` cap) rather than queried per question; large tables need a smaller cap or a filtered view.
-- Markdown renderer is intentionally minimal (no tables, images, task lists, footnotes).
-- No syntax highlighting in code blocks (would add a dependency).
-- Window resize (desktop) uses native CSS `resize`; size isn't persisted.
-- Only `bottom-right` / `bottom-left` positions.
+- Retrieval is keyword-based (+ synonym map + derived keywords). Questions phrased with words the document never uses can miss the section; the model then tends to invent a citation. Structural fix: embedding retrieval via Ollama `all-minilm` (45 MB) as a hybrid — proposed, awaiting go-ahead.
+- Topics the document does not cover get generic advice instead of an explicit "not in the policy" — prompt asks for it, 8B model only half-complies.
+- Long sections (e.g. §2 Password Policy, 4 KB) reduce citation precision; splitting at 2-level numbered sub-headings ending in ":" would help.
+- Heading detection for PDFs is heuristic; oddly formatted PDFs fall back to ~1500-char chunks.
+- DB rows are loaded in full (`DB_MAX_ROWS` cap) rather than queried per question.
+- Widget: minimal Markdown (no tables/images), no syntax highlighting, resize not persisted, only bottom-right/left positions.

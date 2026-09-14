@@ -2,3 +2,7 @@ node_modules
 dist
 *.log
 .DS_Store
+
+# Your own company documents stay out of the repo; only the sample is tracked
+server/policies/*
+!server/policies/example-handbook.pdf

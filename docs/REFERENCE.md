@@ -128,7 +128,7 @@ Facts about the widget (do not guess beyond these):
    - custom (mode B, recommended): the widget POSTs JSON {messages:[{role,content}], stream:true, model?} to api-endpoint and reads the reply by Content-Type: text/event-stream with lines `data: {"delta":"…"}` ending in `data: [DONE]` (also accepts `{"content":…}`, OpenAI chunks, or `{"error":"…"}`), OR application/x-ndjson with {delta|content} per line, OR text/plain streamed text, OR application/json {content}. Non-2xx → shown as a friendly error (401/403 unauthorized, 404 with "model" → model unavailable, 429 too many requests, 5xx server error).
    - ollama (mode A): browser calls {ollama-url}/api/chat with stream:true; needs `model`. Only works when the visitor's machine runs Ollama and OLLAMA_ORIGINS allows the page origin — not for public sites.
    - openai (mode C): browser calls {api-endpoint}/chat/completions with stream:true and optional Bearer api-key; needs `model`.
-   A reference Node proxy for mode B lives in the widget repo at server/proxy.mjs (env: MODEL, UPSTREAM=ollama|openai, OLLAMA_URL, OPENAI_BASE_URL, OPENAI_API_KEY, ALLOWED_ORIGINS, AUTH_TOKEN, RATE_LIMIT, MAX_CONCURRENT, SCOPE=policies-only, KNOWLEDGE_FILE). It can also answer from a company knowledge base in server/policies.json (entries {id, category, title, keywords[], content}). If this project already has a backend, implement the same POST endpoint in it instead of running a second server.
+   A reference Node proxy for mode B lives in the widget repo at server/proxy.mjs (env: MODEL, UPSTREAM=ollama|openai, OLLAMA_URL, OPENAI_BASE_URL, OPENAI_API_KEY, ALLOWED_ORIGINS, AUTH_TOKEN, RATE_LIMIT, MAX_CONCURRENT, SCOPE=policies-only, KNOWLEDGE_FILE, POLICIES_DIR, DB_URL, DB_TABLES, DB_POLICIES_TABLE). It can also answer from a company knowledge base in server/policies.json (entries {id, category, title, keywords[], content}). If this project already has a backend, implement the same POST endpoint in it instead of running a second server.
 5. Public JS API on the element: open(), close(), toggle(), isOpen, sendMessage(text) → Promise, stopGeneration(), clearConversation(), getMessages(), setConfig(partial), getConfig(). Events (bubble + composed CustomEvents): chat-open, chat-close, message-sent {message}, response-start {messageId}, response-complete {message}, conversation-cleared, error {code, message}.
 6. Framework notes: React ≤18 passes only string attributes (use a ref + setConfig for objects); TypeScript needs `declare namespace JSX { interface IntrinsicElements { 'ai-chat-widget': any } }` (or the exported AIChatWidgetElement type). Vue: mark `ai-chat-widget` as a custom element in compilerOptions.isCustomElement. Angular: CUSTOM_ELEMENTS_SCHEMA. Next.js: load with next/script strategy="afterInteractive" and render the tag in the root layout; the element is client-only. WordPress: wp_enqueue_script + echo the tag in wp_footer.
 7. Security rules to respect: never put a real cloud API key in the page; secrets and prompts belong in the backend; set ALLOWED_ORIGINS on the backend to my site (CORS is not auth — add a session/token check if the answers are private); the widget already sanitises Markdown and blocks javascript: links, so don't add innerHTML anywhere.
@@ -280,9 +280,21 @@ Send the token from the widget with `widget.setConfig({ headers: { Authorization
 
 It validates the request, enforces a model allowlist and CORS origin list, streams from the upstream and re-emits normalised SSE. Adapt it to your stack (Express, FastAPI, Laravel, …) — the contract is the table above.
 
-### Company knowledge base (policies.json)
+### Company knowledge base (PDF documents, policies.json, MySQL)
 
-The proxy can answer questions from your own policy handbook while still chatting normally about everything else. Policies live in **`server/policies.json`** — no code changes needed to edit them (the file is hot-reloaded):
+The proxy can answer questions from your own policy handbook while still chatting normally about everything else. Knowledge comes from up to three sources, all merged into one searchable set:
+
+1. **Documents folder** (`POLICIES_DIR`, default `server/policies/` when it exists): every `.pdf`, `.txt` and `.md` file is read (`server/documents.mjs`, PDFs via `pdf-parse`), split into sections at headings (numbered / Title Case / ALL CAPS lines; falls back to ~1500-char chunks), and each section becomes a policy with auto-derived keywords. The folder is watched, so dropping in a new PDF takes effect without a restart. `POLICIES_DIR=none` disables it. A sample `example-handbook.pdf` is included — delete it when you add your own.
+   **Convert to JSON (recommended):** `npm run pdf2json -- server/policies/handbook.pdf [out.json] [--category name]` (`server/pdf-to-json.mjs`) writes the sections as `{ "policies": [{ id, category, title, keywords, content }] }`. A `.json` in the folder is loaded as-is (no PDF parsing) and a PDF with the same base name is skipped, so you can keep the original next to it. Edit titles/content and add hand-written `keywords` — they override the auto-derived ones and fix questions that use words the document doesn't ("DR", "SLA").
+2. **`server/policies.json`** — hand-written policies with explicit keywords (best retrieval quality). `KNOWLEDGE_FILE=none` disables it; then `COMPANY_NAME` / `ASSISTANT_NAME` set the names used in the prompt.
+3. **MySQL / MariaDB** (`server/db.mjs`, via `mysql2`) — the database you manage in phpMyAdmin:
+   - `DB_URL=mysql://user:password@host:3306/database`
+   - `DB_POLICIES_TABLE=policies` — a table with columns `title` (or `name`), `content` (or `text`/`body`/`description`), optional `category`, `keywords` (comma-separated or JSON array), `id`.
+   - `DB_TABLES=products,faq,employees` — any tables; each row becomes one record (`col: value | col: value`, titled by its `name`/`title`/`question`/… column) so the assistant can answer "what is the price of X" style questions.
+   - `DB_MAX_ROWS` (500) rows per table, `DB_REFRESH_SECONDS` (60) reload interval. Only `SELECT * FROM table LIMIT n` is ever run — the model never writes SQL. Table names must match `[A-Za-z0-9_$]+`.
+   - **Use a SELECT-only MySQL user**, and only list tables whose contents may be shown to anyone who can open the chat (rows are injected into the prompt like policies).
+
+`GET /health` reports the count per source (`sources: {file, documents, db}`). The JSON format:
 
 ```json
 {
@@ -304,6 +316,7 @@ How it works (`server/knowledge.mjs`): for every request the latest user questio
 
 - `GET /api/policies` lists the loaded policy ids/titles (only when `EXPOSE_POLICIES=true`).
 - `KNOWLEDGE_FILE=/path/to/other.json` uses a different file; `KNOWLEDGE_FILE=none` disables it.
+- Sections from PDFs and database rows get automatic keywords (title words + most frequent content words). If two sources cover the same topic with different numbers, the model may blend them — keep one source of truth per topic.
 - The sample file ships with security, company and database policies for "Example Company" — replace them with yours.
 
 ## Security
@@ -422,7 +435,7 @@ src/
   types/        chat.ts
   index.ts
 demo/           index.html (hostile host site), dist-embed.html (plain-script embed)
-server/         proxy.mjs (Mode B reference backend), knowledge.mjs + policies.json (company knowledge base)
+server/         proxy.mjs (Mode B reference backend), knowledge.mjs + policies.json + policies/ (PDF docs) + documents.mjs + db.mjs (company knowledge base)
 tests/          vitest suites
 ```
 

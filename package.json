@@ -5,7 +5,9 @@
   "type": "module",
   "main": "dist/chat-widget.js",
   "types": "dist/index.d.ts",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit -p tsconfig.json && vite build",
@@ -15,7 +17,8 @@
     "lint": "eslint src tests server --ext .ts,.mjs",
     "format": "prettier --write \"src/**/*.{ts,css}\" \"tests/**/*.ts\" \"demo/**/*.html\" \"server/**/*.mjs\" \"*.md\"",
     "typecheck": "tsc --noEmit -p tsconfig.json",
-    "proxy": "node server/proxy.mjs"
+    "proxy": "node server/proxy.mjs",
+    "pdf2json": "node server/pdf-to-json.mjs"
   },
   "license": "MIT",
   "devDependencies": {
@@ -28,5 +31,9 @@
     "typescript": "^5.7.2",
     "vite": "^6.0.3",
     "vitest": "^2.1.8"
+  },
+  "dependencies": {
+    "mysql2": "^3.24.4",
+    "pdf-parse": "^2.4.5"
   }
 }

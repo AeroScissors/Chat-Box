@@ -8,6 +8,6 @@
 - Mode A — browser → Ollama directly (local/dev; subject to `OLLAMA_ORIGINS` CORS).
 - Mode B — browser → your proxy (`server/proxy.mjs` reference) → Ollama/OpenAI. Recommended for third-party sites.
 
-**Knowledge base:** `server/policies.json` (security / company / database policies) is retrieved per question by the proxy and injected into the system prompt, so the assistant answers policy questions from the handbook and chats normally otherwise.
+**Knowledge base:** `server/policies.json`, PDF/text documents in `server/policies/`, and optionally MySQL tables (`DB_URL`, the phpMyAdmin database) are merged and retrieved per question by the proxy and injected into the system prompt, so the assistant answers policy questions from the handbook and chats normally otherwise.
 
 **Key docs:** `README.md` (short: commands + embed snippet + AI integration prompt), `docs/INTEGRATION.md` (plain-English how-to + framework recipes), `docs/REFERENCE.md` (full technical reference), `ai/ARCHITECTURE.md`, `ai/API.md`, `ai/PIPELINE.md`, `ai/STATUS.md`, `ai/TASKS.md`, `ai/CHANGELOG.md`.

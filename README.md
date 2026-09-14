@@ -36,7 +36,12 @@ Talk to Ollama directly instead (local use only):
 <ai-chat-widget provider="ollama" model="gemma3:4b"></ai-chat-widget>
 ```
 
-Put your own policies / FAQ in `server/policies.json` — the assistant answers from them.
+Give the assistant your company knowledge — it answers from it and chats normally otherwise:
+
+- **PDF / text**: drop handbook PDFs (or `.txt`/`.md`) into `server/policies/`. They are split by headings and hot-reloaded.
+- **Recommended — convert once to JSON**: `npm run pdf2json -- server/policies/handbook.pdf` writes `handbook.json` next to it (same folder, PDF is then ignored). Open the JSON to fix titles and add your own `keywords` (e.g. `"dr"`, `"sla"`) so questions phrased differently still hit the right section.
+- **JSON**: `server/policies.json` (`KNOWLEDGE_FILE=none` to turn it off).
+- **MySQL (phpMyAdmin)**: `DB_URL=mysql://reader:pw@localhost:3306/mydb DB_TABLES=products,faq npm run proxy` — rows of the listed tables become searchable records; `DB_POLICIES_TABLE=policies` reads a `title/content` table. Read-only; use a SELECT-only user.
 
 ## Let an AI integrate it for you
 

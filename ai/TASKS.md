@@ -36,6 +36,9 @@
 
 ## Knowledge base (2026-09-13)
 - [x] policies.json with security / company / database policies
+- [x] PDF / txt / md policy documents folder (`server/policies/`, pdf-parse, heading split, hot reload)
+- [x] MySQL source (`DB_URL`, policy table + arbitrary tables as records, read-only, periodic refresh)
+- [ ] Verify MySQL source against a real phpMyAdmin/XAMPP database (none was running when implemented)
 - [x] Retrieval + system-prompt injection in proxy; normal chat fallback
 - [x] Demo defaults to proxy; verified in browser
 

@@ -28,7 +28,7 @@ UI → Chat State → Config → LLM Provider → Streaming parsers
 - **Security:** no `innerHTML` with dynamic content (static SVG only); links allowlisted; credentials never persisted.
 
 ## Server-side knowledge base (Mode B only)
-`server/knowledge.mjs` loads `policies.json`, scores each policy against the latest user question (keywords ×3, title words ×2, content words ×0.5, category ×1; threshold 3), and builds a system prompt with the top matches (or a "normal assistant" prompt when none match). `proxy.mjs` prepends it before forwarding to Ollama/OpenAI. The browser widget is unaware of this — policies never reach the client.
+`server/knowledge.mjs` merges policies from `policies.json` (source `file`), the `server/policies/` documents folder (`documents.mjs`: PDF/txt/md → heading-split sections, source `documents`) and MySQL tables (`db.mjs`: policy table and/or arbitrary tables as row records, source `db`, periodic refresh), scores each policy against the latest user question (keywords ×3, title words ×2, content words ×0.5, category ×1; threshold 3), and builds a system prompt with the top matches (or a "normal assistant" prompt when none match). `proxy.mjs` prepends it before forwarding to Ollama/OpenAI. The browser widget is unaware of this — policies never reach the client.
 
 ## Build
 Vite lib mode → `dist/chat-widget.js` (IIFE, global `AIChatWidget`) and `dist/chat-widget.esm.js`. CSS is inlined into JS. `import.meta.env.DEV` gates dev-only warnings.
